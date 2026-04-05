@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aarzu Ansari | My Certificates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy:      #0a1628;
+      --navy-mid:  #0f2044;
+      --navy-lite: #162d5a;
+      --accent:    #4a90d9;
+      --accent2:   #7eb8f7;
+      --white:     #ffffff;
+      --off-white: #e8f0fb;
+      --muted:     #94aed4;
+      --card-bg:   rgba(22, 45, 90, 0.6);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(74,144,217,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(74,144,217,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .dots { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(126,184,247,0.3);
+      animation: floatDot linear infinite;
+    }
+    @keyframes floatDot {
+      0%   { transform: translateY(110vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      background: rgba(10,22,40,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,144,217,0.15);
+      animation: slideDown 0.8s ease both;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent2);
+      letter-spacing: 1px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-back {
+      background: rgba(74,144,217,0.15);
+      border: 1px solid rgba(74,144,217,0.35);
+      color: var(--accent2) !important;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      transition: background 0.3s !important;
+    }
+    .nav-back:hover { background: rgba(74,144,217,0.28) !important; }
+    .nav-back::after { display: none !important; }
+
+    /* ── Page header ── */
+    .page-header {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 5% 3rem;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      margin-bottom: 0.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .page-header h1 span { color: var(--accent2); }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+    .header-line {
+      width: 60px; height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      margin: 0 auto 1rem;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    /* ── Certificates grid ── */
+    .cert-section {
+      position: relative;
+      z-index: 1;
+      padding: 1rem 5% 5rem;
+    }
+
+    /* Category label */
+    .cert-category {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent2);
+      margin-bottom: 1.2rem;
+      margin-top: 2.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(74,144,217,0.2);
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Certificate card */
+    .cert-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(74,144,217,0.18);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+    .cert-card.visible { opacity: 1; transform: translateY(0); }
+    .cert-card:hover {
+      border-color: rgba(74,144,217,0.5);
+      box-shadow: 0 12px 40px rgba(74,144,217,0.15);
+    }
+
+    /* Image area — where you put the certificate image */
+    .cert-img-wrap {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, var(--navy-lite), rgba(74,144,217,0.15));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(74,144,217,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    /* If you add an actual image, it will fill this area */
+    .cert-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .cert-placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.6;
+    }
+    .cert-placeholder-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0.7;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    /* Card bottom info */
+    .cert-info {
+      padding: 1.2rem 1.4rem;
+    }
+    .cert-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .cert-issuer {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cert-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .cert-view-btn {
+      font-size: 0.78rem;
+      color: var(--accent2);
+      text-decoration: none;
+      border: 1px solid rgba(74,144,217,0.3);
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      transition: background 0.3s;
+    }
+    .cert-view-btn:hover { background: rgba(74,144,217,0.15); }
+
+    /* Empty state message */
+    .empty-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 3rem;
+      padding: 2.5rem;
+      border: 1px dashed rgba(74,144,217,0.25);
+      border-radius: 16px;
+      line-height: 1.8;
+    }
+    .empty-note span { color: var(--accent2); font-weight: 500; }
+
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(74,144,217,0.1);
+    }
+    footer span { color: var(--accent2); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .cert-grid { grid-template-columns: 1fr; }
+      .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dots" id="dots"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">AA</div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-back">← Back to Portfolio</a></li>
+      <li><a href="index.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>My <span>Certificates</span></h1>
+    <div class="header-line"></div>
+    <p>A collection of my learning achievements and certifications.</p>
+  </div>
+
+  <!-- Certificates Section -->
+  <div class="cert-section">
+
+    <!-- 
+      ========================================================
+      HOW TO ADD YOUR CERTIFICATES:
+      
+      For each certificate card:
+      1. Replace "Certificate Title" with your certificate name
+      2. Replace "Issuing Organization" with who gave it
+      3. Replace "Month Year" with the date you got it
+      4. To add an image: put your certificate image in the same
+         folder and update the src in the <img> tag below
+      5. To link the certificate: add the URL in href of the
+         "View Certificate" button
+      ========================================================
+    -->
+
+    <div class="cert-category">🎓 Technical Certifications</div>
+    <div class="cert-grid">
+
+      <!-- Certificate Card 1 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+          <img src="certificate/Google GSSSIETW.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Google GSSSIETW (hackathon) Certificate</div>
+          <div class="cert-issuer">Issued by Google</div>
+          <div class="cert-footer">
+            <a href="certificate/Google GSSSIETW.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Card 2 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+          <img src="certificate/Google SSAIT.jpeg"alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Google SSAIT (hackathon) certificate</div>
+          <div class="cert-issuer">Issued by google</div>
+          <div class="cert-footer">
+            <a href="certificate/Google SSAIT.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Card 3 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/fast typing.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Fast Typing Certificate</div>
+          <div class="cert-issuer">Issued by Gov.polytechnic for girls, Surat</div>
+          <div class="cert-footer">
+            <a href="certificate/fast typing.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 4 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/quiz-2-code.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Code Quiz</div>
+          <div class="cert-issuer">Issued by Gov.polytechnic for girls, Surat</div>
+          <div class="cert-footer">
+            <a href="certificate/quiz-2-code.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 5 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/computer fundamentals.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Computer Fundamentals Certificate</div>
+          <div class="cert-issuer">Issued by GM Computer Education</div>
+          <div class="cert-footer">
+            <a href="certificate/computer fundamentals.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 6 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/ISTE student member.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">ISTE Student Member Certificate</div>
+          <div class="cert-issuer">Issued by ISTE</div>
+          <div class="cert-footer">
+            <a href="certificate/ISTE student member.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+ 
+       <!-- Certificate Card 6.2 -->
+       <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/spoken tutorial.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">HTML-5 (Spoken Tutorial)Certificate</div>
+          <div class="cert-issuer">Issued by IIT Bombay</div>
+          <div class="cert-footer">
+            <a href="certificate/spoken tutorial.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end cert-grid -->
+
+    <div class="cert-category">🏆 Participation & Events</div>
+    <div class="cert-grid">
+
+      <!-- Certificate Card 7 -->
+     <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/women empowerment elocution.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Women empowerment elocution Certificate</div>
+          <div class="cert-issuer">Issued by Akhil hind Mahila Parishad</div>
+          <div class="cert-footer">
+            <a href="certificate/women empowerment elocution.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+        <!-- Certificate Card 8 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/elocution certificate.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Elocution Competition Certificate</div>
+          <div class="cert-issuer">Issued by Vanita Vishram</div>
+          <div class="cert-footer">
+            <a href="certificate/elocution certificate.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+        <!-- Certificate Card 9 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/patriotic singing.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Patriotic Singing Comptetition</div>
+          <div class="cert-issuer">Issued by Vanita Vishram</div>
+          <div class="cert-footer">
+            <a href="certificate/patriotic singing.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+        <!-- Certificate Card 10 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/vidhyapeeth ahemdabad.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Gujarat Vidhyapeeth Certificate </div>
+          <div class="cert-issuer">Issued by Gujarat Vidhyapeeth</div>
+          <div class="cert-footer">
+            <a href="certificate/vidhyapeeth ahemdabad.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 11 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/talk about the topic.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Talk about the topic Certificate </div>
+          <div class="cert-issuer">Issued by Gov. POlytechnic for Girls, Surat</div>
+          <div class="cert-footer">
+            <a href="C:\Users\Aarzu\OneDrive\Desktop\Aarzu\My portfolio\certificate\talk about the topic.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 12-->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/har ghar tiranga quiz certificate.jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Har ghar tiranga quiz Certificate </div>
+          <div class="cert-issuer">Issued by Gov. of india</div>
+          <div class="cert-footer">
+            <a href="certificate/har ghar tiranga quiz certificate.jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+       <!-- Certificate Card 13 -->
+      <div class="cert-card">
+        <div class="cert-img-wrap">
+        <img src="certificate/vikas saptah (gov quiz).jpeg" alt="Certificate"/> 
+        </div>
+        <div class="cert-info">
+          <div class="cert-title">Vikas saptha quiz Certificate </div>
+          <div class="cert-issuer">Issued by Gov. of gujarat</div>
+          <div class="cert-footer">
+            <a href="certificate/vikas saptah (gov quiz).jpeg" class="cert-view-btn">View →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end cert-grid -->
+ </div><!-- end cert-section -->
+
+  <footer>
+    <span>Aarzu Ansari</span> · 2026</p>
+  </footer>
+
+  <script>
+    // Floating dots
+    const container = document.getElementById('dots');
+    for (let i = 0; i < 25; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      const size = Math.random() * 4 + 2;
+      d.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;`;
+      container.appendChild(d);
+    }
+
+    // Scroll reveal for cert cards
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.cert-card').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
